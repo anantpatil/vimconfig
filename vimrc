@@ -5,6 +5,7 @@ let g:polyglot_disabled = ['go', 'markdown']
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'bronson/vim-visual-star-search'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'tomtom/tcomment_vim'
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
@@ -40,12 +41,25 @@ Plug 'rafcamlet/nvim-luapad'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
+Plug 'sharkdp/bat'
+Plug 'sharkdp/fd'
+Plug 'BurntSushi/ripgrep'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
+Plug 'neovim/nvim-lspconfig'
+Plug 'kyazdani42/nvim-web-devicons'
+
+Plug 'gmarik/Vundle.vim'
+
+Plug 'vim-syntastic/syntastic'
+Plug 'nvie/vim-flake8'
+
+Plug 'morhetz/gruvbox'
 
 call plug#end()
 
 " Syntax and filetype specific indentation and plugins on
 syntax enable
-filetype on
+filetype off
 filetype plugin on
 filetype indent on
 
@@ -56,13 +70,56 @@ syntax sync minlines=256
 set noerrorbells
 set visualbell
 
+" Press Space to turn off highlighting and clear any
+" message already displayed.  
+" nnoremap <silent> <Space> :nohlsearch<Bar>:echo<CR>
+
+" Press F4 to toggle highlighting on/off, and show current value.
+noremap <F4> :set hlsearch! hlsearch?<CR>
+
+" Following will map F8 to hghlight the occurences of current word
+" * and # are used to search the current word forward and backword
+nnoremap <F8> :let @/='\<<C-R>=expand("<cword>")<CR>\>'<CR>:set hls<CR>
+
+" set lang to en_gb
+setlocal spelllang=en_gb
+
+" Press F2 to toggle spell check on/off, and show current value.
+noremap <F2> :setlocal spell! spell?<CR>
+
+" Press F7 to toggle syntax highlighting on/off
+map <F7> :if exists("g:syntax_on") <Bar>
+    \   syntax off <Bar>
+    \ else <Bar>
+    \   syntax enable <Bar>
+    \ endif <CR>
+
+" Use external paragraph formatter par
+" par is powerful paragraph formatter
+" set formatprg=par\ -w40 for width 40
+" use gq to format using par and gw to use vim's formatter
+" q option to handle nested quotations in plain text e-mail.
+" Use j option to justify text
+" repeat characters in bodiless lines
+" set formatprg=par\ -w72qrj
+" i have kep for q option for mail editing
+set formatprg=par\ -w72q
+
+" map sort function
+vnoremap <leader>s :sort<CR>
+
+" Allow saving of files as sudo when I forgot to start vim using sudo.
+cmap w!! w !sudo tee > /dev/null %
+
+
+"
 " Check if we can load the FZF vim plugin
 if filereadable("/usr/local/opt/fzf/bin/fzf")
   set rtp+=/usr/local/opt/fzf
 end
 
-if filereadable("/home/mrnugget/.fzf/bin/fzf")
-  set rtp+=/home/mrnugget/.fzf
+if filereadable("/opt/adminuser/.fzf/bin/fzf")
+  set rtp+=/opt/adminuser/.fzf
 end
 
 " Basic stuff
@@ -147,6 +204,8 @@ let mapleader = ","
 noremap \ ,
 map <space> <leader>
 let maplocalleader = ","
+nmap <leader>v :tabedit $MYVIMRC<CR>
+
 
 " Move around splits with <C-[hjkl]> in normal mode
 nnoremap <C-j> <C-w>j
@@ -510,7 +569,34 @@ augroup ft_c
 augroup END
 
 " Python
+let python_highlight_all=1
 autocmd FileType python setlocal expandtab shiftwidth=4 tabstop=4 softtabstop=4
+" Disable indentLines by default.
+" Use IndentLinesToggle to toggle.
+let g:indentLine_enabled = 0
+
+" pip install flake8 and pylint to use syntastic properly
+"let g:syntastic_python_checkers = ['pylint', 'flake8']
+let g:syntastic_python_checkers = ['flake8', 'pylint']
+"let g:syntastic_python_checkers = ['pylint']
+
+" Flake8, use F3
+autocmd FileType python map <buffer> <F3> :call Flake8()<CR>
+let g:flake8_show_quickfix=0  " don't show
+"let g:flake8_show_quickfix=1  " show (default)
+"let g:flake8_show_in_gutter=0  " don't show (default)
+let g:flake8_show_in_gutter=1  " show
+let g:flake8_error_marker='EE'     " set error marker to 'EE'
+let g:flake8_warning_marker='WW'   " set warning marker to 'WW'
+" to use colors defined in the colorscheme
+highlight link Flake8_Error      Error
+highlight link Flake8_Warning    WarningMsg
+highlight link Flake8_Complexity WarningMsg
+highlight link Flake8_Naming     WarningMsg
+highlight link Flake8_PyFlake    WarningMsg
+" Run flake8 after every save
+autocmd BufWritePost *.py call Flake8()
+
 
 " Go
 augroup ft_golang
@@ -634,6 +720,7 @@ set termguicolors
 set t_Co=256
 set t_ut=
 
+let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 let kitty_profile = $KITTY_COLORS
 
 if kitty_profile == "dark"
@@ -645,12 +732,15 @@ if kitty_profile == "dark"
   highlight LspDiagnosticsFloatingInformation guifg=#5e81ac guibg=NONE
   highlight LspDiagnosticsFloatingWarning guifg=#ebcb8b guibg=NONE
 else
-  set background=light
-  let g:lucius_style  = 'light'
-  let g:lucius_contrast  = 'high'
-  let g:lucius_contrast_bg  = 'high'
-  let g:lucius_no_term_bg  = 1
-  colorscheme lucius
+  "set background=light
+  set background=dark
+  "let g:lucius_style  = 'light'
+  "let g:lucius_contrast  = 'high'
+  "let g:lucius_contrast_bg  = 'high'
+  "let g:lucius_no_term_bg  = 1
+  "colorscheme lucius
+  "colorscheme codedark
+  colorscheme gruvbox
 
   " Give the active window a blue background and white foreground statusline
   hi StatusLine ctermfg=15 ctermbg=32 guifg=#FFFFFF guibg=#005FAF gui=bold cterm=bold

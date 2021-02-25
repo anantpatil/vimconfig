@@ -1,7 +1,14 @@
-# Thorsten Ball's Vim Configuration
+# Vim Configuration
+# Inspired by Thorsten Ball's Vim Configuration
+
+Important: Read install-neovim.sh
+```bash
+./install-neovim.sh
+```
+
 
 ```bash
-git clone git://github.com/mrnugget/vimconfig.git ~/.vim
+git clone git://github.com/anantpatil/vimconfig.git ~/.vim
 cd ~/.vim && ./setup.sh
 ```
 
