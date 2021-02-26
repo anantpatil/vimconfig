@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 
 # Install from repo
-# This will only install stable version.
+# THIS WILL ONLY INSTALL STABLE VERSION - NOT PREFERRED
 # On Ubuntu 16.04 it installs ancient version; not useful
 # sudo add-apt-repository ppa:neovim-ppa/stable
 # sudo apt-get update
 # sudo apt-get install neovim
 
+# PREFERRED METHOD OF INSTALLING
 # Install using github release and add symbolic link
 # e.g. nvim -> /opt/adminuser/squashfs-root/usr/bin/nvim
 # Here nvim.appimage is extracted in home dir /opt/adminuser
