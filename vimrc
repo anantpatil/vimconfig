@@ -243,11 +243,12 @@ nmap <silent> Y y$
 
 " Toggle hlsearch
 nmap <silent> <leader>h :set invhlsearch<CR>
+"nmap <silent> <leader><Space> :set invhlsearch<CR>
 " Toggle case sensitive search
 nmap <silent> <leader>c :set invignorecase<CR>
 
 " Open and source vimrc file
-nmap <silent> <leader>ev :e ~/.vimrc<CR>
+nmap <silent> <leader>ev :tabedit ~/.vimrc<CR>
 nmap <silent> <leader>sv :so ~/.vimrc<CR>
 " Wipe out ALL the buffers
 nmap <silent> <leader>bw :%bwipeout<CR>
@@ -382,7 +383,8 @@ require('telescope').setup {
 }
 EOF
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
-nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fl <cmd>Telescope live_grep<cr>
+nnoremap <leader>fg <cmd>Telescope grep_string<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 nnoremap <leader>fR <cmd>Telescope lsp_references<cr>
@@ -732,15 +734,16 @@ if kitty_profile == "dark"
   highlight LspDiagnosticsFloatingInformation guifg=#5e81ac guibg=NONE
   highlight LspDiagnosticsFloatingWarning guifg=#ebcb8b guibg=NONE
 else
-  "set background=light
-  set background=dark
+  set background=light
+  "set background=dark
   "let g:lucius_style  = 'light'
-  "let g:lucius_contrast  = 'high'
-  "let g:lucius_contrast_bg  = 'high'
-  "let g:lucius_no_term_bg  = 1
+  "let g:lucius_contrast  = 'low'
+  "let g:lucius_contrast_bg  = 'low'
+  "let g:lucius_no_term_bg  = 0
   "colorscheme lucius
   "colorscheme codedark
-  colorscheme gruvbox
+  "colorscheme gruvbox
+  colorscheme default
 
   " Give the active window a blue background and white foreground statusline
   hi StatusLine ctermfg=15 ctermbg=32 guifg=#FFFFFF guibg=#005FAF gui=bold cterm=bold
