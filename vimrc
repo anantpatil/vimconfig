@@ -6,7 +6,10 @@ Plug 'AndrewRadev/splitjoin.vim'
 Plug 'bronson/vim-visual-star-search'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+"
+" Insall fzf, plus dependencies [bat, delta, Ag, Rg) for things to work
 Plug 'junegunn/fzf.vim'
+
 Plug 'tomtom/tcomment_vim'
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
 Plug 'sheerun/vim-polyglot'
@@ -54,6 +57,8 @@ Plug 'vim-syntastic/syntastic'
 Plug 'nvie/vim-flake8'
 
 Plug 'morhetz/gruvbox'
+
+Plug 'preservim/nerdtree'
 
 call plug#end()
 
@@ -213,6 +218,13 @@ nnoremap <C-k> <C-w>k
 nnoremap <C-h> <C-w>h
 nnoremap <C-l> <C-w>l
 
+"NerdTree stuff
+nnoremap <leader>no :NERDTreeFocus<CR>
+nnoremap <C-n> :NERDTree<CR>
+nnoremap <C-t> :NERDTreeToggle<CR>
+nnoremap <leader>nf :NERDTreeFind<CR>
+let g:NERDTreeWinSize=60
+
 " Move visual block selection with <C-[jk]> in visual mode
 vnoremap <C-j> :m '>+1<CR>gv=gv
 vnoremap <C-k> :m '<-2<CR>gv=gv
@@ -350,6 +362,19 @@ nnoremap <silent> <leader>fr :History<CR>
 nnoremap <silent> <leader>ft :Tags<CR>
 nnoremap <silent> <leader>fi :FZF<CR>
 nnoremap <silent> <C-p> :FZF<CR>
+
+" RG maps to a new version, Rg is default
+function! RipgrepFzf(query, fullscreen)
+  let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case -- %s || true'
+  let initial_command = printf(command_fmt, shellescape(a:query))
+  let reload_command = printf(command_fmt, '{q}')
+  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+endfunction
+
+command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
+
+nnoremap <silent> <C-g> :RG<CR>
 
 " Hide statusline
 autocmd! FileType fzf
@@ -734,8 +759,8 @@ if kitty_profile == "dark"
   highlight LspDiagnosticsFloatingInformation guifg=#5e81ac guibg=NONE
   highlight LspDiagnosticsFloatingWarning guifg=#ebcb8b guibg=NONE
 else
-  set background=light
-  "set background=dark
+  "set background=light
+  set background=dark
   "let g:lucius_style  = 'light'
   "let g:lucius_contrast  = 'low'
   "let g:lucius_contrast_bg  = 'low'
