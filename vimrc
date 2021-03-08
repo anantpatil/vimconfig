@@ -165,8 +165,10 @@ end
 
 " Backup
 set undofile
-set undodir=~/.vim/tmp/undo//
-set backupdir=~/.vim/tmp/backup//
+" set undodir=~/.vim/tmp/undo//
+" set backupdir=~/.vim/tmp/backup//
+set backupdir=~/.config/nvim/tmp/backup
+set backupdir=~/.config/nvim/tmp/undo
 set backup
 set noswapfile
 

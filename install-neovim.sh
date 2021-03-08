@@ -12,6 +12,26 @@
 # e.g. nvim -> /opt/adminuser/squashfs-root/usr/bin/nvim
 # Here nvim.appimage is extracted in home dir /opt/adminuser
 
+# ON MACOS INSTALL LATEST
+brew install --HEAD luajit
+brew install --HEAD neovim
+
+# Make sure you have plug.vim installed at right place
+curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+git clone git@github.com:anantpatil/vimconfig.git ~/.config/nvim
+ln -s ~/.config/nvim/vimrc ~/.config/nvim/init.vim
+
+# Create backup directories
+# set backupdir=~/.config/nvim/tmp/backup¬
+# set backupdir=~/.config/nvim/tmp/undo¬
+mkdir -p ~/.config/nvim/tmp/backup
+mkdir -p ~/.config/nvim/tmp/undo
+
+# Add this to bash profile etc
+export VIMRC=~/.config/nvim/vimrc
+
 # Make it as default
 sudo update-alternatives --install /usr/bin/vi vi /usr/bin/nvim 60
 sudo update-alternatives --config vi
